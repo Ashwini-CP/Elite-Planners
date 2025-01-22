@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elite Planners - Registration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        .container {
+            max-width: 500px;
+            margin: 30px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #27ae60;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        .form-group .radio-group {
+            display: flex;
+            gap: 15px;
+        }
+        .form-group .radio-group input {
+            margin-right: 5px;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #27ae60;
+            color: #fff;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #2ecc71;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Elite Planners</h1>
+        <form id="registrationForm">
+            <!-- Name -->
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" placeholder="Enter your name" required>
+            </div>
+
+            <!-- Age -->
+            <div class="form-group">
+                <label for="age">Age</label>
+                <input type="number" id="age" name="age" placeholder="Enter your age" required min="1">
+            </div>
+
+            <!-- Role -->
+            <div class="form-group">
+                <label for="role">Role</label>
+                <select id="role" name="role" required>
+                    <option value="" disabled selected>Select your role</option>
+                    <option value="Student">Student</option>
+                    <option value="Employee">Employee</option>
+                    <option value="Business Owner">Business Owner</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <!-- Gender -->
+            <div class="form-group">
+                <label>Gender</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="gender" value="Male" required> Male</label>
+                    <label><input type="radio" name="gender" value="Female"> Female</label>
+                    <label><input type="radio" name="gender" value="Other"> Other</label>
+                </div>
+            </div>
+
+            <!-- Phone Number -->
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required pattern="[0-9]{10}">
+            </div>
+
+            <!-- State -->
+            <div class="form-group">
+                <label for="state">State</label>
+                <select id="state" name="state" required>
+                    <option value="" disabled selected>Select your state</option>
+                    <option value="Maharashtra">Maharashtra</option>
+                    <option value="Delhi">Delhi</option>
+                    <option value="Karnataka">Karnataka</option>
+                    <option value="Tamil Nadu">Tamil Nadu</option>
+                    <option value="Uttar Pradesh">Uttar Pradesh</option>
+                </select>
+            </div>
+
+            <!-- City -->
+            <div class="form-group">
+                <label for="city">City</label>
+                <select id="city" name="city" required>
+                    <option value="" disabled selected>Select your city</option>
+                </select>
+            </div>
+
+            <!-- Register Button -->
+            <button type="submit" class="btn">Register</button>
+        </form>
+    </div>
+
+    <script>
+        const stateCityMap = {
+            Maharashtra: ["Mumbai", "Pune", "Nagpur"],
+            Delhi: ["New Delhi", "Dwarka", "Rohini"],
+            Karnataka: ["Bangalore", "Mysore", "Hubli"],
+            "Tamil Nadu": ["Chennai", "Coimbatore", "Madurai"],
+            "Uttar Pradesh": ["Lucknow", "Kanpur", "Varanasi"],
+        };
+
+        const stateSelect = document.getElementById("state");
+        const citySelect = document.getElementById("city");
+        const form = document.getElementById("registrationForm");
+
+        stateSelect.addEventListener("change", () => {
+            const cities = stateCityMap[stateSelect.value] || [];
+            citySelect.innerHTML = `<option value="" disabled selected>Select your city</option>`;
+            cities.forEach(city => {
+                const option = document.createElement("option");
+                option.value = city;
+                option.textContent = city;
+                citySelect.appendChild(option);
+            });
+        });
+
+        form.addEventListener("submit", (event) => {
+            event.preventDefault();
+            window.location.href = "success.html"; // Redirect to success page
+        });
+    </script>
+</body>
+</html>
