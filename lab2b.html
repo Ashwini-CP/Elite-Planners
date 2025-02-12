@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elite Planners 🎉</title>
+    <style>
+        /* Google Font */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        /* General Styling */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f8f9fa;
+            color: #333;
+            transition: background 0.3s ease-in-out;
+        }
+
+        /* Dark Mode */
+        .dark-mode {
+            background: #1e1e1e;
+            color: #f8f9fa;
+        }
+
+        .dark-mode section {
+            background: #2a2a2a;
+            color: #f8f9fa;
+        }
+
+        /* Container */
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: auto;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(to right, #ff6f61, #de6262);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        /* Dropdown Menu */
+        .dropdown {
+            margin-top: 10px;
+        }
+
+        .dropdown select {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            cursor: pointer;
+        }
+
+        /* Sections */
+        section {
+            background: white;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Event List */
+        #event-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        #event-list li {
+            background: #f1f1f1;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        /* Buttons */
+        button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #218838;
+        }
+
+        /* Dark Mode Button */
+        #dark-mode-toggle {
+            background: #007bff;
+        }
+
+        #dark-mode-toggle:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Elite Planners 🎊</h1>
+            <p>Your Ultimate Event Planning Companion</p>
+            <button id="dark-mode-toggle">🌙 Toggle Dark Mode</button>
+
+            <!-- Dropdown Menu -->
+            <div class="dropdown">
+                <select id="event-category">
+                    <option value="all">📅 All Events</option>
+                    <option value="conference">🎤 Conferences</option>
+                    <option value="concert">🎶 Concerts</option>
+                    <option value="workshop">🛠 Workshops</option>
+                </select>
+            </div>
+        </header>
+
+        <!-- Event List -->
+        <section id="event-section">
+            <h2>📢 Upcoming Events</h2>
+            <ul id="event-list"></ul>
+            <button onclick="addNewEvent()">➕ Add New Event</button>
+        </section>
+    </div>
+
+    <script>
+        // JavaScript Object with Getters, Setters, and Dot Notation
+        const eventManager = {
+            events: [
+                { id: 1, name: "Tech Conference 🎤", date: "2025-03-15", category: "conference" },
+                { id: 2, name: "Music Fest 🎶", date: "2025-04-10", category: "concert" }
+            ],
+
+            get eventCount() {
+                return this.events.length;
+            },
+
+            set addEvent(event) {
+                this.events.push(event);
+            },
+
+            displayEvents() {
+                const eventList = document.getElementById("event-list");
+                eventList.innerHTML = "";
+                this.events.forEach(event => {
+                    let li = document.createElement("li");
+                    li.innerHTML = `${event.name} - ${event.date} 
+                        <button onclick="deleteEvent(${event.id})">❌ Delete</button>`;
+                    eventList.appendChild(li);
+                });
+            }
+        };
+
+        // Function to Add a New Event (Using an Arrow Function)
+        const addNewEvent = () => {
+            let eventName = prompt("Enter Event Name:");
+            let eventDate = prompt("Enter Event Date (YYYY-MM-DD):");
+            let eventCategory = document.getElementById("event-category").value;
+
+            if (eventName && eventDate) {
+                let newEvent = { id: Date.now(), name: `${eventName} 🎉`, date: eventDate, category: eventCategory };
+                eventManager.addEvent = newEvent; // Using setter
+                eventManager.displayEvents();
+            }
+        };
+
+        // Function to Delete an Event (Using `delete` Operator and Call)
+        function deleteEvent(eventId) {
+            eventManager.events = eventManager.events.filter(event => event.id !== eventId);
+            eventManager.displayEvents();
+        }
+
+        // Dark Mode Toggle (Using bind)
+        function toggleDarkMode() {
+            document.body.classList.toggle("dark-mode");
+        }
+        document.getElementById("dark-mode-toggle").addEventListener("click", toggleDarkMode.bind(this));
+
+        // Example of apply(), call(), and bind()
+        const logger = {
+            logEvent: function(method) {
+                console.log(`Event displayed using ${method}`);
+            }
+        };
+
+        function displayWithApply() {
+            logger.logEvent.apply(logger, ["apply()"]);
+        }
+
+        function displayWithCall() {
+            logger.logEvent.call(logger, "call()");
+        }
+
+        function displayWithBind() {
+            let boundLog = logger.logEvent.bind(logger, "bind()");
+            boundLog();
+        }
+
+        // Display Events Initially
+        eventManager.displayEvents();
+    </script>
+</body>
+</html>
