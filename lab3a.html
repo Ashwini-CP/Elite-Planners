@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elite Planners 🎉</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /* 🎨 Stylish Light Pastel Colors */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #FAF3E0;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 450px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0px 0px 10px gray;
+            margin-top: 20px;
+        }
+
+        h1 {
+            color: #FF6B6B;
+        }
+
+        button {
+            background: #6A0572;
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            margin: 5px 0;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: 0.3s ease;
+        }
+
+        button:hover {
+            background: #45043D;
+        }
+
+        /* 🎯 Filters */
+        .filters {
+            margin-top: 15px;
+        }
+
+        input, select {
+            padding: 8px;
+            width: 100%;
+            margin: 5px 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        /* 📅 Table */
+        table {
+            width: 100%;
+            margin-top: 15px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background: #FF6B6B;
+            color: white;
+        }
+
+        /* 🖼️ Images */
+        .event-images img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-top: 15px;
+            box-shadow: 0px 0px 5px gray;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎊 Elite Planners 🎊</h1>
+
+        <!-- 🛠️ Buttons -->
+        <button id="loadEvents">📋 Load Events</button>
+        <button id="filterButton">🔍 Filter Events</button>
+        <button id="fetchJSON">📜 Get Event Details</button>
+        <button id="postEvent">📝 Book Event</button>
+        <button id="ajaxRequest">ℹ️ Fetch Event Info</button>
+
+        <!-- 🏷️ Filters -->
+        <div class="filters">
+            <label>Date:</label>
+            <input type="date" id="dateFilter">
+            
+            <label>Category:</label>
+            <select id="categoryFilter">
+                <option value="all">All Categories</option>
+                <option value="music">Music 🎵</option>
+                <option value="sports">Sports ⚽</option>
+                <option value="theatre">Theatre 🎭</option>
+            </select>
+        </div>
+
+        <!-- 📋 Event Table -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody id="eventTable">
+                <!-- Events will be dynamically inserted here -->
+            </tbody>
+        </table>
+
+        <!-- 🖼️ Event Images -->
+        <div class="event-images">
+            <img src="web_img_1.jpg" alt="Event Image 1">
+            <img src="web_img_2.jpg" alt="Event Image 2">
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            // 📋 Load Events Dynamically
+            $("#loadEvents").click(function() {
+                $("#eventTable").load("events.html", function() {
+                    alert("✅ Events Loaded Successfully!");
+                });
+            });
+
+            // 🔍 Filter Events
+            $("#filterButton").click(function() {
+                let selectedDate = $("#dateFilter").val();
+                let selectedCategory = $("#categoryFilter").val();
+
+                $.getJSON("events.json", function(data) {
+                    $("#eventTable").html(""); // Clear table
+
+                    let filteredEvents = data.filter(event => 
+                        (selectedDate === "" || event.date === selectedDate) &&
+                        (selectedCategory === "all" || event.category === selectedCategory)
+                    );
+
+                    if (filteredEvents.length === 0) {
+                        $("#eventTable").append("<tr><td colspan='3'>🚫 No Events Found</td></tr>");
+                    } else {
+                        $.each(filteredEvents, function(index, event) {
+                            $("#eventTable").append(`
+                                <tr>
+                                    <td>${event.date}</td>
+                                    <td>${event.category}</td>
+                                    <td>${event.price}</td>
+                                </tr>
+                            `);
+                        });
+                    }
+                });
+            });
+
+            // 📜 Get JSON Event Data
+            $("#fetchJSON").click(function() {
+                $.getJSON("events.json", function(data) {
+                    $("#eventTable").html(""); // Clear table
+                    $.each(data, function(index, event) {
+                        $("#eventTable").append(`
+                            <tr>
+                                <td>${event.date}</td>
+                                <td>${event.category}</td>
+                                <td>${event.price}</td>
+                            </tr>
+                        `);
+                    });
+                });
+            });
+
+            // 📝 Post Event Booking
+            $("#postEvent").click(function() {
+                $.post("save_event.php", { eventName: "Music Concert" }, function(response) {
+                    alert("🎟️ Booking Response: " + response);
+                });
+            });
+
+            // ℹ️ Fetch Event Info via AJAX
+            $("#ajaxRequest").click(function() {
+                $.ajax({
+                    url: "event_details.php",
+                    type: "GET",
+                    beforeSend: function() {
+                        console.log("⏳ Fetching Event Details...");
+                    },
+                    success: function(response) {
+                        console.log("✅ Event Details:", response);
+                        alert("ℹ️ Event Info Fetched!");
+                    },
+                    error: function(error) {
+                        console.log("❌ Error fetching details:", error);
+                    }
+                });
+            });
+
+            // 🔄 Auto-refresh event list every 10 seconds
+            setInterval(function() {
+                $.ajax({
+                    url: "live_events.php",
+                    success: function(data) {
+                        $("#eventTable").html(data);
+                    }
+                });
+            }, 10000);
+        });
+    </script>
+</body>
+</html>
